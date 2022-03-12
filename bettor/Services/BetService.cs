@@ -4,27 +4,36 @@ namespace bettor.Services;
 
 public class BetService {
 
-    private static BetService instance = new BetService();
+    private static BetService instance;
 
-    public static BetService getInstance() {
+    private readonly Die _die;
+
+    public static BetService getInstance(Die die) {
+
+        if (instance == null) {
+            instance = new BetService(die);
+        }
+
         return instance;
     }
 
     private readonly Dictionary<long, Bet> _bets = new Dictionary<long, Bet>();
 
-    private BetService() {
-
+    private BetService(Die die) {
+        _die = die;
     }
 
     public Bet PlaceBet(User user, Bet bet) {
-        _bets.Add(bet.Id, bet);
+        
 
 
         if (!user.Account.CanAffordStake(bet.Points)) {
             // TODO: throw exception
         }
 
-        var diced = Random.Shared.Next(0, 10);
+        _bets.Add(bet.Id, bet);
+
+        var diced = _die.roll();
 
         Console.WriteLine($"Diced {diced}");
 

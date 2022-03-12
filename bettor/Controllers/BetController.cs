@@ -11,7 +11,7 @@ public class BetController : ControllerBase {
 
     private readonly List<Bet> _bets = new List<Bet>();
 
-    private readonly BetService _betService = BetService.getInstance();
+    private readonly BetService _betService = BetService.getInstance(new RandomDie());
     private readonly UserService _userService = UserService.getInstance();
 
     public BetController(ILogger<BetController> logger) {
