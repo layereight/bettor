@@ -6,38 +6,44 @@ namespace bettor.Controllers;
 
 [ApiController]
 [Route("bets")]
-public class BetController : ControllerBase {
+public class BetController : ControllerBase
+{
     private readonly ILogger<BetController> _logger;
 
-    private readonly List<Bet> _bets = new List<Bet>();
+    private readonly BetService _betService = BetService.GetInstance(new RandomDie());
+    private readonly UserService _userService = UserService.GetInstance();
 
-    private readonly BetService _betService = BetService.getInstance(new RandomDie());
-    private readonly UserService _userService = UserService.getInstance();
-
-    public BetController(ILogger<BetController> logger) {
+    public BetController(ILogger<BetController> logger)
+    {
         _logger = logger;
     }
 
     [HttpGet]
-    public IEnumerable<Bet> GetAll() {
+    public IEnumerable<Bet> GetAll()
+    {
         return _betService.GetBets();
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Bet> GetBet(int id) {
+    public ActionResult<Bet> GetBet(int id)
+    {
         var bet = _betService.GetBet(id);
 
-        if(bet == null)
+        if (bet == null)
+        {
             return NotFound();
+        }
 
         return bet;
     }
 
     [HttpPost]
-    public IActionResult PlaceBet(Bet bet) {
+    public IActionResult PlaceBet(Bet bet)
+    {
         var user = _userService.GetUser(bet.UserId);
 
-        if(user == null) {
+        if (user == null)
+        {
             return BadRequest();
         }
 
@@ -48,11 +54,14 @@ public class BetController : ControllerBase {
     }
 
     [HttpGet("{id}/result")]
-    public ActionResult<BetResult> GetBetResult(int id) {
+    public ActionResult<BetResult> GetBetResult(int id)
+    {
         var bet = _betService.GetBet(id);
 
-        if(bet == null)
+        if (bet == null)
+        {
             return NotFound();
+        }
 
         return bet.BetResult;
     }

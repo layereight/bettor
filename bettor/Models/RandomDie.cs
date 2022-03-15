@@ -1,9 +1,10 @@
 namespace bettor.Models;
 
 
-public class RandomDie : Die
+public class RandomDie : IDie
 {
-    public int roll() {
+    public int Roll()
+    {
         return Random.Shared.Next(0, 10);
     }
 }

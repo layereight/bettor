@@ -1,6 +1,6 @@
 using bettor.Models;
 
-public class UnfairDie : Die
+public class UnfairDie : IDie
 {
 
     private int number;
@@ -9,7 +9,7 @@ public class UnfairDie : Die
         number = 0;
     }
 
-    public int roll() {
+    public int Roll() {
         return number;
     }
 
