@@ -4,7 +4,7 @@ using bettor.Models;
 
 namespace bettor.Tests;
 
-public class Tests
+public class BetServiceTest
 {
     private BetService? _betService;
     private UnfairDie? _unfairDie;

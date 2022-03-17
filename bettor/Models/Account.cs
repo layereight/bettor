@@ -4,24 +4,29 @@ namespace bettor.Models;
 
 public class Account
 {
-    public long Balance { get; set; }
+    public int Balance { get; set; }
 
-    public Account()
+    public Account(int initial)
     {
-        Balance = 10000;
+        Balance = initial;
     }
 
-    public void Add(long amount)
+    public void Add(int amount)
     {
         Balance += amount;
     }
 
-    public void Deduct(long amount)
+    public void Deduct(int amount)
     {
+        if (!CanAffordStake(amount))
+        {
+            throw new InsufficientFundsException($"Trying to deduct {amount}. But only got {Balance}.");
+        }
+
         Balance -= amount;
     }
 
-    public bool CanAffordStake(long stake)
+    public bool CanAffordStake(int stake)
     {
         return Balance >= stake;
     }

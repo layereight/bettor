@@ -3,6 +3,8 @@ namespace bettor.Models;
 
 public class User
 {
+    private const int InitialAccountBalance = 10000;
+
     public long Id { get; set; }
     public string? Name { get; set; }
     public Account Account;
@@ -11,7 +13,7 @@ public class User
     {
         Id = id;
         Name = name;
-        Account = new Account();
+        Account = new Account(InitialAccountBalance);
     }
 
     internal void Wins(Bet bet)
