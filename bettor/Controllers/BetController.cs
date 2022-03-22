@@ -10,12 +10,14 @@ public class BetController : ControllerBase
 {
     private readonly ILogger<BetController> _logger;
 
-    private readonly BetService _betService = BetService.GetInstance(new RandomDie());
-    private readonly UserService _userService = UserService.GetInstance();
+    private readonly IBetService _betService;
+    private readonly IUserService _userService;
 
-    public BetController(ILogger<BetController> logger)
+    public BetController(ILogger<BetController> logger, IBetService betService, IUserService userService)
     {
         _logger = logger;
+        _betService = betService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -47,9 +49,18 @@ public class BetController : ControllerBase
             return BadRequest();
         }
 
-        // TODO: verify account balance, verify number 0..9
+        // TODO: verify number 0..9
 
-        _betService.PlaceBet(user, bet);
+        try
+        {
+            _betService.PlaceBet(user, bet);
+        }
+        catch (InsufficientFundsException e)
+        {
+            _logger.LogWarning("Unable to place bet! {}", e);
+            return BadRequest();
+        }
+
         return CreatedAtAction(nameof(PlaceBet), new { id = bet.Id }, bet);
     }
 

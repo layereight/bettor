@@ -2,33 +2,21 @@ using bettor.Models;
 
 namespace bettor.Services;
 
-public class BetService
+public class BetService : IBetService
 {
-    private static BetService? s_instance;
-
     private readonly IDie _die;
     private readonly Dictionary<long, Bet> _bets = new Dictionary<long, Bet>();
 
-    private BetService(IDie die)
+    public BetService(IDie die)
     {
         _die = die;
-    }
-
-    public static BetService GetInstance(IDie die)
-    {
-        if (s_instance == null)
-        {
-            s_instance = new BetService(die);
-        }
-
-        return s_instance;
     }
 
     public Bet PlaceBet(User user, Bet bet)
     {
         if (!user.Account.CanAffordStake(bet.Points))
         {
-            // TODO: throw exception
+            throw new InsufficientFundsException($"Trying to bet a stake of {bet.Points} when user {user.Id} only has an account balance of {user.Account.Balance}.");
         }
 
         _bets.Add(bet.Id, bet);
