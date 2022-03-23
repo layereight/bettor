@@ -50,6 +50,7 @@ public class BetController : ControllerBase
         }
 
         // TODO: verify number 0..9
+        // TODO: verify stake >= 0
 
         try
         {
@@ -61,7 +62,7 @@ public class BetController : ControllerBase
             return BadRequest();
         }
 
-        return CreatedAtAction(nameof(PlaceBet), new { id = bet.Id }, bet);
+        return CreatedAtAction(nameof(GetBet), new { id = bet.Id }, null);
     }
 
     [HttpGet("{id}/result")]
