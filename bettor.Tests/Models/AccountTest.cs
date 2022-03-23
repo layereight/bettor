@@ -83,16 +83,10 @@ public class AccountTest
         // given
         var stake = 1001;
 
-        try
-        {
-            // when
-            _account.Deduct(stake);
-            Assert.Fail($"Was expecting an {nameof(InsufficientFundsException)}!");
-        }
-        catch (InsufficientFundsException e)
-        {
-            // then
-            Assert.AreEqual("Trying to deduct 1001. But only got 1000.", e.Message);
-        }
+        // when
+        var exception = Assert.Throws<InsufficientFundsException>(() => _account.Deduct(stake));
+
+        // then
+        Assert.AreEqual("Trying to deduct 1001. But only got 1000.", exception.Message);
     }
 }
