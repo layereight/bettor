@@ -27,6 +27,6 @@ public class BetServiceTest
         var bet = _betService?.PlaceBet(_user, new Bet { Number = 3, Points = 100, UserId = 1 });
 
         // then
-        Assert.AreEqual(10900, _user?.Account.Balance);
+        Assert.That(_user?.Account.Balance, Is.EqualTo(10900));
     }
 }
