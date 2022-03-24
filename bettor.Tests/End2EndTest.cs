@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Text;
 using System.Text.Json;
 using System.Net;
 
@@ -21,7 +20,6 @@ public class End2EndTest
         _client = new WebApplicationFactory<Program>()
         .WithWebHostBuilder(builder =>
         {
-
             builder.ConfigureServices(services =>
             {
                 services.AddSingleton<IDie>(sp => _unfairDie);
@@ -35,27 +33,49 @@ public class End2EndTest
     {
         // given
         _unfairDie?.WillRoll(3);
-        var content = new StringContent("{ \"points\": 1000, \"number\": 3, \"userid\": 1}", Encoding.UTF8, "application/json");
 
         // when, place bet
-        var response = await _client.PostAsync("/bets", content);
+        var response = await _client.PostAsJsonAsync<Bet>("/bets", new Bet { Number = 3, Points = 1000, UserId = 1 });
 
         // then
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
         Assert.That(await response.Content.ReadAsStringAsync(), Is.Empty);
         Assert.That(response.Headers.Location?.LocalPath, Is.EqualTo("/bets/1"));
+        await AssertBetResult("/bets/1/result", "won", "+9000", 19000);
+    }
 
-        // when, getting results for the bet
-        response = await _client.GetAsync("/bets/1/result");
+    [Test]
+    public async Task ShouldLoseWhenNumberIsWrong()
+    {
+        // given
+        _unfairDie?.WillRoll(8);
+
+        // when, place bet
+        var response = await _client.PostAsJsonAsync<Bet>("/bets", new Bet { Number = 3, Points = 1000, UserId = 1 });
+
+        // then
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Created));
+        Assert.That(await response.Content.ReadAsStringAsync(), Is.Empty);
+        Assert.That(response.Headers.Location?.LocalPath, Is.EqualTo("/bets/1"));
+        await AssertBetResult("/bets/1/result", "lost", "-1000", 9000);
+    }
+
+    private async Task AssertBetResult(string uri, string expectedStatus, string expectedPoints, int expectedAccountBalance)
+    {
+        // getting results for the bet
+        var response = await _client.GetAsync(uri);
         var responseContent = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(responseContent);
 
         // then
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        BetResult? betResult = JsonSerializer.Deserialize<BetResult>(responseContent, new JsonSerializerOptions{PropertyNameCaseInsensitive = true});
-        Assert.That(betResult?.Status, Is.EqualTo("won"));
-        Assert.That(betResult?.Account, Is.EqualTo(19000));
-        Assert.That(betResult?.Points, Is.EqualTo("+9000"));
+        var betResult = Deserialize<BetResult>(responseContent);
+        Assert.That(betResult?.Status, Is.EqualTo(expectedStatus));
+        Assert.That(betResult?.Points, Is.EqualTo(expectedPoints));
+        Assert.That(betResult?.Account, Is.EqualTo(expectedAccountBalance));
     }
 
+    private static TValue? Deserialize<TValue>(string json)
+    {
+        return JsonSerializer.Deserialize<TValue>(json, new JsonSerializerOptions{PropertyNameCaseInsensitive = true});
+    }
 }
