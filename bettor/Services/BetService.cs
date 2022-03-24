@@ -19,8 +19,13 @@ public class BetService : IBetService
 
     public Bet PlaceBet(User user, Bet bet)
     {
+        // input validation
         if (!Account.IsValidStake(bet.Points)) {
             throw new InvalidStakeException($"Invalid stake of {bet.Points}.");
+        }
+
+        if (!_die.CanRollNumber(bet.Number)) {
+            throw new InvalidBetNumberException($"Invalid bet number of {bet.Number}.");
         }
 
         if (!user.Account.CanAffordStake(bet.Points))
@@ -28,14 +33,15 @@ public class BetService : IBetService
             throw new InsufficientFundsException($"Trying to bet a stake of {bet.Points} when user {user.Id} only has an account balance of {user.Account.Balance}.");
         }
 
+        // give bet an id and add it as valid bet
         bet.Id = ++_idSequence;
-
         _bets.Add(bet.Id, bet);
 
+        // roll the dice
         var diced = _die.Roll();
-
         _logger.LogInformation($"Diced {diced}");
 
+        // win or lose
         if (bet.Number == diced)
         {
             user.Wins(bet);

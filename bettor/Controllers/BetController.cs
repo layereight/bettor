@@ -70,7 +70,7 @@ public class BetController : ControllerBase
     }
 
     [HttpGet("{id}/result")]
-    public ActionResult<BetResult> GetBetResult(int id)
+    public ActionResult<BetResult?> GetBetResult(int id)
     {
         var bet = _betService.GetBet(id);
 
@@ -79,6 +79,6 @@ public class BetController : ControllerBase
             return NotFound();
         }
 
-        return bet.BetResult;
+        return bet?.BetResult;
     }
 }
