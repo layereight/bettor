@@ -19,10 +19,10 @@ public class AccountTest
         var addedAmount = 100;
 
         // when
-        _account.Add(addedAmount);
+        _account?.Add(addedAmount);
 
         // then
-        Assert.AreEqual(1100, _account.Balance);
+        Assert.AreEqual(1100, _account?.Balance);
     }
 
     [Test]
@@ -32,10 +32,10 @@ public class AccountTest
         var deductAmount = 100;
 
         // when
-        _account.Deduct(deductAmount);
+        _account?.Deduct(deductAmount);
 
         // then
-        Assert.AreEqual(900, _account.Balance);
+        Assert.AreEqual(900, _account?.Balance);
     }
 
     [Test]
@@ -45,7 +45,7 @@ public class AccountTest
         var stake = 100;
 
         // when
-        var canAfford = _account.CanAffordStake(stake);
+        var canAfford = _account?.CanAffordStake(stake);
 
         // then
         Assert.True(canAfford);
@@ -58,7 +58,7 @@ public class AccountTest
         var stake = 1000;
 
         // when
-        var canAfford = _account.CanAffordStake(stake);
+        var canAfford = _account?.CanAffordStake(stake);
 
         // then
         Assert.True(canAfford);
@@ -71,7 +71,7 @@ public class AccountTest
         var stake = 1001;
 
         // when
-        var canAfford = _account.CanAffordStake(stake);
+        var canAfford = _account?.CanAffordStake(stake);
 
         // then
         Assert.False(canAfford);
@@ -84,9 +84,9 @@ public class AccountTest
         var stake = 1001;
 
         // when
-        var exception = Assert.Throws<InsufficientFundsException>(() => _account.Deduct(stake));
+        var exception = Assert.Throws<InsufficientFundsException>(() => _account?.Deduct(stake));
 
         // then
-        Assert.AreEqual("Trying to deduct 1001. But only got 1000.", exception.Message);
+        Assert.AreEqual("Trying to deduct 1001. But only got 1000.", exception?.Message);
     }
 }

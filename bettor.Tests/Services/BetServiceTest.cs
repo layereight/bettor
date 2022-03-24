@@ -21,12 +21,12 @@ public class BetServiceTest
     public void Test1()
     {
         // given
-        _unfairDie.WillRoll(3);
+        _unfairDie?.WillRoll(3);
 
         // when
-        var bet = _betService.PlaceBet(_user, new Bet { Number = 3, Points = 100, UserId = 1 });
+        var bet = _betService?.PlaceBet(_user, new Bet { Number = 3, Points = 100, UserId = 1 });
 
         // then
-        Assert.AreEqual(10900, _user.Account.Balance);
+        Assert.AreEqual(10900, _user?.Account.Balance);
     }
 }
