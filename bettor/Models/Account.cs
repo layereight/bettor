@@ -11,12 +11,12 @@ public class Account
         Balance = initial;
     }
 
-    public void Add(int amount)
+    internal void Add(int amount)
     {
         Balance += amount;
     }
 
-    public void Deduct(int amount)
+    internal void Deduct(int amount)
     {
         if (!CanAffordStake(amount))
         {
@@ -29,5 +29,10 @@ public class Account
     public bool CanAffordStake(int stake)
     {
         return Balance >= stake;
+    }
+
+    public static bool IsValidStake(int stake)
+    {
+        return stake >= 0;
     }
 }

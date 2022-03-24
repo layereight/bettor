@@ -50,11 +50,15 @@ public class BetController : ControllerBase
         }
 
         // TODO: verify number 0..9
-        // TODO: verify stake >= 0
 
         try
         {
             _betService.PlaceBet(user, bet);
+        }
+        catch (InvalidStakeException e)
+        {
+            _logger.LogWarning("Unable to place bet! {}", e);
+            return BadRequest();
         }
         catch (InsufficientFundsException e)
         {

@@ -4,18 +4,25 @@ namespace bettor.Services;
 
 public class BetService : IBetService
 {
+    private readonly ILogger<BetService> _logger;
+
     private readonly IDie _die;
     private readonly Dictionary<long, Bet> _bets = new Dictionary<long, Bet>();
 
     private long _idSequence = 0;
 
-    public BetService(IDie die)
+    public BetService(ILogger<BetService> logger, IDie die)
     {
+        _logger = logger;
         _die = die;
     }
 
     public Bet PlaceBet(User user, Bet bet)
     {
+        if (!Account.IsValidStake(bet.Points)) {
+            throw new InvalidStakeException($"Invalid stake of {bet.Points}.");
+        }
+
         if (!user.Account.CanAffordStake(bet.Points))
         {
             throw new InsufficientFundsException($"Trying to bet a stake of {bet.Points} when user {user.Id} only has an account balance of {user.Account.Balance}.");
@@ -27,7 +34,7 @@ public class BetService : IBetService
 
         var diced = _die.Roll();
 
-        Console.WriteLine($"Diced {diced}");
+        _logger.LogInformation($"Diced {diced}");
 
         if (bet.Number == diced)
         {

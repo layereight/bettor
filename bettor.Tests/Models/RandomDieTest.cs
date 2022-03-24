@@ -35,9 +35,9 @@ public class RandomDieTest
     [TestCase(8, ExpectedResult = true)]
     [TestCase(9, ExpectedResult = true)]
     [TestCase(10, ExpectedResult = false)]
-    public bool ShouldBeAbleToRollNumberOrNot(int givenNumber)
+    public bool? ShouldBeAbleToRollNumberOrNot(int givenNumber)
     {
         // when
-        return _randomDie.CanRollNumber(givenNumber);
+        return _randomDie?.CanRollNumber(givenNumber);
     }
 }

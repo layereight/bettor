@@ -13,12 +13,12 @@ public class BetServiceTest
     public void Setup()
     {
         _unfairDie = new UnfairDie();
-        _betService = new BetService(_unfairDie);
+        _betService = new BetService(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddConsole()).CreateLogger<BetService>(), _unfairDie);
         _user = new User(1, "Bob");
     }
 
     [Test]
-    public void Test1()
+    public void ShouldWinWithRightBet()
     {
         // given
         _unfairDie?.WillRoll(3);
