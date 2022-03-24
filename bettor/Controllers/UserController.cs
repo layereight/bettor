@@ -29,7 +29,9 @@ public class UserController : ControllerBase
         var user = _userService.GetUser(id);
 
         if (user == null)
+        {
             return NotFound();
+        }
 
         return user;
     }

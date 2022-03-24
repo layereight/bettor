@@ -49,13 +49,17 @@ public class BetController : ControllerBase
             return BadRequest();
         }
 
-        // TODO: verify number 0..9
-
         try
         {
-            _betService.PlaceBet(user, bet);
+            var createdBet = _betService.PlaceBet(user, bet);
+            return CreatedAtAction(nameof(GetBet), new { id = createdBet.Id }, null);
         }
         catch (InvalidStakeException e)
+        {
+            _logger.LogWarning("Unable to place bet! {}", e);
+            return BadRequest();
+        }
+        catch (InvalidBetNumberException e)
         {
             _logger.LogWarning("Unable to place bet! {}", e);
             return BadRequest();
@@ -65,8 +69,6 @@ public class BetController : ControllerBase
             _logger.LogWarning("Unable to place bet! {}", e);
             return BadRequest();
         }
-
-        return CreatedAtAction(nameof(GetBet), new { id = bet.Id }, null);
     }
 
     [HttpGet("{id}/result")]
