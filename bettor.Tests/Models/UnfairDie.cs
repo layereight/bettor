@@ -1,7 +1,7 @@
 
 namespace bettor.Models;
 
-public class UnfairDie : IDie
+public class UnfairDie : RandomDie
 {
     private int number;
 
@@ -9,7 +9,7 @@ public class UnfairDie : IDie
         number = 0;
     }
 
-    public int Roll() {
+    public override int Roll() {
         return number;
     }
 
