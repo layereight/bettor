@@ -20,16 +20,16 @@ The project implements gambling.
 
 ### Bets
 
-* GET  ​**/bets** - collection of made bets
-* POST ​**/bets** - create (place) a bet
-* GET  ​**/bets​/{id}** - get bet with a specific id
-* GET  ​**/bets​/{id}​/result** - bet result sub resource returning the outcome of a bet
+* GET  **/bets** - collection of made bets
+* POST **/bets** - create (place) a bet
+* GET  **/bets/{id}** - get bet with a specific id
+* GET  **/bets/{id}/result** - bet result sub resource returning the outcome of a bet
 
 ### User
 
-* GET ​**/users** - collection of users
-* GET ​**/users​/{id}** - get user with a specific id
-* GET ​**/users​/{id}​/account** - account sub resource for a user
+* GET **/users** - collection of users
+* GET **/users/{id}** - get user with a specific id
+* GET **/users/{id}/account** - account sub resource for a user
 
 ## Swagger
 
