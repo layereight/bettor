@@ -6,6 +6,11 @@ public class Account
 {
     public int Balance { get; set; }
 
+    public Account()
+    {
+        
+    }
+
     public Account(int initial)
     {
         Balance = initial;
