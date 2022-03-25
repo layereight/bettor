@@ -1,6 +1,6 @@
 # bettor [![Build Status](https://github.com/layereight/bettor/actions/workflows/main.yml/badge.svg)](https://github.com/layereight/bettor/actions)
 
-Learn some C#/.NET with a Web API example trying to follow [RESTful API patterns](https://restfulapi.net/).
+Learn some C#/.NET with a Web API example, trying to follow [RESTful API patterns](https://restfulapi.net/).
 
 The project implements a gambling scenario.
 
